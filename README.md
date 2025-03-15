@@ -1,83 +1,80 @@
-# Chatbot de To-Do: Sistema de Organización Personal en Telegram con Firebase
+# CHATBOT TO-DO SYSTEM DESIGN DOC  
+**Link**: N/A
 
-## Descripción del Proyecto
-Este es un chatbot de **To-Do** diseñado para ayudar a los usuarios a gestionar tareas de manera eficiente a través de **Telegram** y utilizando **Firebase** como base de datos para el almacenamiento en la nube. El bot permite a los usuarios crear, eliminar y listar tareas, establecer recordatorios, y organizar las tareas según prioridades. Es una herramienta ideal para mejorar la productividad y organización personal mediante una interfaz de mensajería accesible.
+**Author(s)**: Juan Iran López Mercado
 
-## 1. **Resumen del Proyecto**
-El **Chatbot de To-Do** es una herramienta interactiva ejecutada en Telegram que ayuda a los usuarios a gestionar tareas y recordatorios de manera eficiente. El chatbot permite agregar, eliminar y listar tareas pendientes, establecer recordatorios, y categorizarlas por prioridades. **Firebase** se usará como backend para almacenar y sincronizar tareas de manera eficiente.
+**Status**: Draft
 
-## 2. **Objetivos**
-- **Gestión de tareas**: Permitir al usuario crear, eliminar y actualizar tareas a través de comandos en Telegram.
-- **Categorías y prioridades**: Clasificar las tareas por categorías (trabajo, estudio, hogar) y niveles de prioridad (alta, media, baja).
-- **Recordatorios automáticos**: Enviar notificaciones en Telegram para recordar las fechas límite o el vencimiento de tareas.
-- **Lista de tareas filtrada**: Ofrecer al usuario una vista filtrada de las tareas según prioridad o vencimiento.
-- **Seguimiento de progreso**: Mostrar al usuario el progreso de las tareas completadas mediante actualizaciones en el chat.
+**Ultima actualización**: 2025-03-15
 
-## 3. **Características Principales**
+## Contenido
+- [Objetivo](#objetivo)
+- [Goals](#goals)
+- [Non-Goals](#non-goals)
+- [Background](#background)
+- [Overview](#overview)
+- [Detailed Design](#detailed-design)
+  - [Solucion 1](#solucion-1)
+    - [Frontend](#frontend-1)
+    - [Backend](#backend-1)
+  - [Solucion 2](#solucion-2)
+    - [Frontend](#frontend-2)
+    - [Backend](#backend-2)
+- [Consideraciones](#consideraciones)
+- [Métricas](#métricas)
+- [Links](#links)
 
-### 3.1 **Agregar tareas**
-- **Función**: Permitir a los usuarios agregar nuevas tareas con una descripción, fecha límite y prioridad.
-- **Formato de Comando**: 
-  - `/agregar [Descripción] para [Fecha] con prioridad [alta/media/baja]`
-- **Ejemplo**: `/agregar "Terminar reporte" para "15 de marzo" con prioridad alta`.
+## Objetivo
+**¿Qué y por qué estamos haciendo esto?**
 
-### 3.2 **Eliminar tareas**
-- **Función**: Eliminar una tarea de la lista del usuario.
-- **Formato de Comando**: 
-  - `/eliminar [Número/Descripción]`
-- **Ejemplo**: `/eliminar 1` o `/eliminar "Terminar reporte"`.
+Este proyecto busca crear un chatbot en Telegram para organizar tareas (to-do) mediante una interfaz simple y accesible. El objetivo es automatizar la gestión de tareas y recordar al usuario sus actividades, mejorando la productividad y organización diaria. Firebase se utilizará como la base de datos para almacenar y gestionar las tareas de manera eficiente.
 
-### 3.3 **Listar tareas**
-- **Función**: Mostrar una lista de todas las tareas con la opción de filtrar por fecha de vencimiento o prioridad.
-- **Formato de Comando**: 
-  - `/listar [Filtro]`
-- **Filtros posibles**: 
-  - Sin filtro (muestra todas las tareas).
-  - Por prioridad (`alta`, `media`, `baja`).
-  - Por fecha de vencimiento (`hoy`, `esta semana`, `este mes`).
-- **Ejemplo**: `/listar` o `/listar prioridad alta`.
+## Goals
+- Crear un chatbot funcional en Telegram que ayude al usuario a gestionar tareas.
+- Implementar una interfaz sencilla y amigable para interactuar con el chatbot.
+- Integrar funcionalidades de recordatorio de tareas.
+- Utilizar Firebase como base de datos para almacenar y recuperar las tareas.
 
-### 3.4 **Recordatorios**
-- **Función**: Enviar recordatorios automáticos antes de las fechas límite.
-- **Comportamiento**: El chatbot recordará al usuario una tarea 1 día antes y el mismo día del vencimiento.
+## Non-Goals
+- Desarrollar una aplicación móvil o web completa para la gestión de tareas.
+- Implementar sistemas de inteligencia artificial avanzados para predicción de tareas.
+- Integrar con plataformas de terceros como Google Calendar o Trello.
 
-### 3.5 **Actualizar tareas**
-- **Función**: Permitir modificar la descripción, fecha o prioridad de una tarea existente.
-- **Formato de Comando**: 
-  - `/actualizar [Número/Descripción] con [Nueva descripción/Nueva fecha/Nueva prioridad]`.
-- **Ejemplo**: `/actualizar 1 con nueva fecha 16 de marzo`.
+## Background
+Este proyecto se enmarca dentro de la necesidad de automatizar y optimizar la gestión de tareas personales. Muchas personas tienen dificultades para organizar sus actividades diarias, y un chatbot simple puede proporcionar una solución eficaz. El chatbot operará en Telegram, y utilizará Firebase como backend para almacenar las tareas del usuario y proporcionar una sincronización en tiempo real.
 
-## 4. **Arquitectura Técnica**
+## Overview
+El chatbot será capaz de recibir comandos desde Telegram y gestionar tareas como añadir, eliminar, o listar tareas pendientes. Las tareas se almacenarán en Firebase, y el chatbot notificará al usuario acerca de sus actividades programadas.
 
-### 4.1 **Tecnologías**
-- **Lenguaje de programación**: Python.
-- **Plataforma de chat**: Telegram.
-- **Framework**: `python-telegram-bot` para la interacción con Telegram.
-- **Base de datos**: Firebase Realtime Database o Firestore para el almacenamiento de tareas y datos del usuario.
+## Detailed Design
+La arquitectura del sistema se dividirá en dos componentes principales: Frontend y Backend.
 
-### 4.2 **Integración con Firebase**
-Se utilizará **Firebase** como base de datos para almacenar:
-- **ID de usuario**: Cada usuario de Telegram tendrá un ID único.
-- **Tareas**: Se almacenarán las tareas de cada usuario con descripción, fecha de vencimiento, y prioridad.
-- **Estados**: El estado de cada tarea (completada o pendiente).
-- **Historial**: Registros de creación y modificación de tareas.
+### Solucion 1
+#### Frontend
+El frontend consistirá en un bot que se implementará en Telegram. Utilizaremos la [API de Telegram](https://core.telegram.org/bots/api) para recibir comandos y responder de forma interactiva. El bot interactuará con el usuario mediante mensajes de texto simples.
 
-### 4.3 **Persistencia de Datos**
-Firebase permitirá la sincronización en tiempo real de las tareas, asegurando que los usuarios puedan acceder a sus tareas desde cualquier dispositivo. Los datos clave a almacenar incluyen:
-- Descripción de la tarea.
-- Fecha de vencimiento.
-- Prioridad de la tarea.
-- Estado (completada o no completada).
+#### Backend
+El backend se gestionará en Firebase, utilizando Firebase Realtime Database o Firestore para almacenar y recuperar las tareas. Firebase proporcionará una sincronización en tiempo real entre el servidor y los usuarios, y gestionará el almacenamiento de datos de manera escalable.
 
-## 5. **Consideraciones Futuras**
-- **Integración con Google Calendar**: Sincronizar tareas con eventos de Google Calendar.
-- **Multiusuario**: Mejorar el soporte para múltiples usuarios simultáneos, asegurando que las tareas se almacenen y gestionen de forma aislada entre usuarios.
-- **Tareas recurrentes**: Agregar soporte para tareas que se repitan a diario, semanalmente o mensualmente.
+### Solucion 2
+#### Frontend
+Se desarrollará una interfaz sencilla de texto donde los usuarios puedan escribir comandos como "Añadir tarea", "Listar tareas", y "Eliminar tarea". El chatbot responderá con las tareas actuales o la confirmación de la acción ejecutada.
 
-## 6. **Despliegue**
-El chatbot será alojado en un servidor y estará disponible a través de la API de Telegram. Se usará **Firebase** para el almacenamiento de datos, con el proyecto desplegado usando `Docker` para facilitar la configuración. 
+#### Backend
+El backend se implementará utilizando Firebase para almacenar tareas. Se utilizarán las funcionalidades de Firebase Authentication para autenticar a los usuarios y Firebase Realtime Database o Firestore para gestionar las tareas. El sistema permitirá la manipulación de tareas y la programación de recordatorios.
 
-### Pasos de Despliegue:
-1. Configurar el proyecto en Firebase y obtener las credenciales necesarias.
-2. Integrar el SDK de Firebase con el código del bot en Python.
-3. Configurar el despliegue automático mediante Docker.
+## Consideraciones
+- **Preocupaciones**: Se debe considerar el manejo de errores si el chatbot recibe comandos incorrectos o si no se pueden agregar tareas.
+- **Tech Debt**: Usar Firebase puede implicar una dependencia externa que podría generar deuda técnica si el sistema escala mucho. Se debe monitorear el uso de las funciones en tiempo real.
+- **Trade-offs**: La simplicidad del diseño con Firebase puede limitar algunas funcionalidades avanzadas que se podrían agregar en el futuro, como la integración con otros servicios o la personalización de recordatorios.
+
+## Métricas
+- **Tasa de éxito de comandos**: ¿Cuántos comandos el chatbot maneja correctamente?
+- **Tiempo de respuesta**: ¿Cuánto tiempo tarda el chatbot en responder a las consultas del usuario?
+- **Satisfacción del usuario**: Se evaluará la experiencia del usuario mediante retroalimentación directa o encuestas.
+- **Uso de la base de datos**: Medir cuántas tareas se crean, actualizan y eliminan, para determinar la eficiencia del sistema con Firebase.
+
+## Links
+- [Enlace al repositorio del proyecto](https://github.com/IranEme/DesignDoc/)
+- [Documentación de la API de Telegram](https://core.telegram.org/bots/api)
+- [Documentación de Firebase](https://firebase.google.com/docs)
